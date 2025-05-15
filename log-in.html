@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PelisPRO - Autenticación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/components/auth.css">
+</head>
+<body>
+    <div class="app-container auth-container">
+        <div class="background-gradient"></div>
+        
+        <main class="auth-main">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="signin">Registro</button>
+                <button class="auth-tab" data-tab="login">Iniciar Sesión</button>
+            </div>
+            
+            <div class="auth-panel">
+                
+                <!-- Panel de Login -->
+                <div class="auth-panel" id="login-panel">
+                    <div class="auth-card">
+                        <h1 class="auth-title">Bienvenido a PelisPRO!</h1>
+                        <h2 class="auth-subtitle">Inicia Sesion</h2>
+                        
+                        <form id="login-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="login-email">E-mail</label>
+                                <input type="email" id="login-email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="login-password">Contraseña</label>
+                                <input type="password" id="login-password" name="password" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Inicia Sesion</button>
+
+                            <a href="/sign-in.html" class="btn btn-secondary">
+                                <button type="button" class="text-back" id="login-register">Crear Cuenta</button>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    
+    <!-- Cargar scripts en el orden correcto -->
+    <script src="assets/js/utils/helpers.js"></script>
+    <script src="assets/js/components/toast.js"></script>
+    <script src="assets/js/services/auth-service.js"></script>
+    <script src="assets/js/views/auth.js"></script>
+</body>
+</html>

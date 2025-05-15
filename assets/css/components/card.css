@@ -1,0 +1,68 @@
+/* Tarjetas de películas */
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.movie-card {
+    background-color: var(--background-card);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    cursor: pointer;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--background-card-hover);
+}
+
+.movie-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+.movie-info {
+    padding: var(--spacing-md);
+}
+.position-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-width{
+    max-width: 70%;
+}
+
+.movie-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0 0 var(--spacing-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movie-date {
+    font-size: var(--font-size-sm);
+    color: rgba(245, 246, 250, 0.8);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.movie-rating {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid #2ecc71;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
