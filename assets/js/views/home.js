@@ -2,6 +2,12 @@
 /**
  * Vista de la página principal
  */
+import Helpers from '../utils/helpers.js';
+import Navbar  from '../components/navbar.js';
+import API  from '../services/api.js';
+import Search  from '../components/search.js';
+import MovieCard from '../components/card.js';
+
 class HomeView {
   constructor() {
     this.moviesContainer = document.getElementById("movies-container")
@@ -409,3 +415,5 @@ class HomeView {
     }
   }
 }
+
+export default HomeView;

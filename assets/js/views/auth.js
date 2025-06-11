@@ -1,6 +1,12 @@
 /**
  * Vista de la página de autenticación
  */
+
+import AuthService from '../services/auth-service.js';
+import Helpers from '../utils/helpers.js';
+import Navbar from '../components/navbar.js';
+
+
 class AuthView {
     constructor() {
       this.signinForm = document.getElementById("signin-form")
@@ -19,7 +25,8 @@ class AuthView {
      */
     init() {
       // Verificar si el usuario ya está autenticado
-      if (AuthService.isAuthenticated()) {
+      const authService = new AuthService()
+      if (authService.isAuthenticated()) {
         window.location.href = "index.html"
         return
       }
@@ -181,16 +188,7 @@ class AuthView {
     setupBackground() {
       const gradient = document.querySelector(".background-gradient")
       if (!gradient) return
-  
-      // Añadir imagen de fondo con películas
-      gradient.style.backgroundImage = `
-        linear-gradient(
-          rgba(44, 14, 93, 0.85), 
-          rgba(72, 52, 212, 0.75), 
-          rgba(108, 92, 231, 0.65)
-        ),
-        url('https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png')
-      `
+
       gradient.style.backgroundSize = "cover"
       gradient.style.backgroundPosition = "center"
       gradient.style.backgroundBlendMode = "overlay"
@@ -290,3 +288,4 @@ class AuthView {
     new AuthView()
   })
   
+  export default AuthView;

@@ -1,6 +1,8 @@
 /**
  * Componente de tarjeta de película
  */
+import Helpers from '../utils/helpers.js';  // Add this import at the top
+import API from '../services/api.js';  
 class MovieCard {
   /**
    * Crea una tarjeta de película
@@ -78,7 +80,7 @@ class MovieCard {
     })
   }
 }
-
+  export default MovieCard ;
 // Import necessary modules or declare variables
 // Assuming Helpers and API are defined in separate files, import them.
 // If they are part of the same file or global scope, this is not needed.

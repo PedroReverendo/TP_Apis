@@ -122,3 +122,5 @@ const API = {
         return this.fetchFromAPI(`/discover/movie?primary_release_year=${year}&language=es-ES&page=${page}`);
     }
 };
+
+export default API;

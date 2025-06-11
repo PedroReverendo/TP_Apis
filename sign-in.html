@@ -45,21 +45,140 @@
                             
                             <button type="submit" class="btn btn-primary">Crear Cuenta</button>
 
-                                <a href="/log-in.html" class="btn btn-secondary">
-                                    <button type="button" class="text-back"id="signin-back">Volver</button>
-                                </a>
+                            <a href="/log-in.html" class="btn btn-secondary">
+                                <button type="button" class="text-back" id="signin-back">Volver</button>
+                            </a>
                         </form>
                     </div>
                 </div>
-            
             </div>
         </main>
     </div>
     
     <!-- Cargar scripts en el orden correcto -->
-    <script src="assets/js/utils/helpers.js"></script>
-    <script src="assets/js/components/toast.js"></script>
-    <script src="assets/js/services/auth-service.js"></script>
-    <script src="assets/js/views/auth.js"></script>
+    <script type="module" src="assets/js/utils/helpers.js"></script>
+   <script type="module">
+        import ToastManager from './assets/js/components/toast.js';
+        const toastManager = new ToastManager();
+        window.showToast = (message, type = 'success') => {
+            toastManager.show(message, type);
+        };
+    </script>
+    <script type="module">
+      import AuthService from './assets/js/services/auth-service.js';
+      const authService = new AuthService();
+      window.authService = authService; // Make available globally
+    </script>
+    <script>
+        // Funcionalidad específica del registro
+        document.addEventListener('DOMContentLoaded', function() {
+            const signinForm = document.getElementById('signin-form');
+            const signinButton = signinForm.querySelector('button[type="submit"]');
+
+            // Manejar envío del formulario de registro
+            signinForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('signin-name').value.trim();
+                const email = document.getElementById('signin-email').value.trim();
+                const password = document.getElementById('signin-password').value;
+
+                // Validar campos
+                if (!name || !email || !password) {
+                    showToast('Por favor, completa todos los campos', 'error');
+                    return;
+                }
+
+                // Validar formato de email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showToast('Por favor, ingresa un email válido', 'error');
+                    return;
+                }
+
+                // Validar longitud de contraseña
+                if (password.length < 6) {
+                    showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                    return;
+                }
+
+                // Deshabilitar botón mientras se procesa
+                signinButton.disabled = true;
+                signinButton.textContent = 'Creando cuenta...';
+
+                try {
+                    // Log para debug - puedes quitar esto después
+                    console.log('Enviando datos de registro:', {
+                        username: name,
+                        email: email,
+                        password: '***'
+                    });
+
+                    const response = await authService.register({
+                        username: name,
+                        email: email,
+                        password: password
+                    });
+
+                    showToast('¡Cuenta creada exitosamente!', 'success');
+                    
+                    // Redirigir a la página principal después de un breve delay
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error en registro:', error);
+                    
+                    // Manejo más específico de errores con toast
+                    let errorMessage = 'Error al crear la cuenta';
+                    
+                    if (error.message) {
+                        if (error.message.includes('email ya está registrado') || 
+                            error.message.includes('email already exists')) {
+                            errorMessage = 'Este email ya está registrado';
+                        } else if (error.message.includes('Faltan campos obligatorios')) {
+                            errorMessage = 'Por favor, completa todos los campos requeridos';
+                        } else if (error.message.includes('password') || 
+                                   error.message.includes('contraseña')) {
+                            errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+                        } else if (error.message.includes('username') || 
+                                   error.message.includes('nombre')) {
+                            errorMessage = 'El nombre de usuario no es válido';
+                        } else if (error.message.includes('email') && 
+                                   error.message.includes('válido')) {
+                            errorMessage = 'Por favor, ingresa un email válido';
+                        } else {
+                            errorMessage = error.message;
+                        }
+                    }
+                    
+                    showToast(errorMessage, 'error');
+                } finally {
+                    // Rehabilitar botón
+                    signinButton.disabled = false;
+                    signinButton.textContent = 'Crear Cuenta';
+                }
+            });
+
+            // Verificar si ya está autenticado
+            if (authService.isAuthenticated()) {
+                // Si ya está logueado, redirigir al home
+                window.location.href = '/index.html';
+            }
+
+            // Debug: Verificar conexión con el servidor
+            fetch('http://localhost:3000/api/users/health')
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn('El servidor puede no estar funcionando correctamente');
+                    }
+                })
+                .catch(error => {
+                    console.warn('No se puede conectar al servidor:', error);
+                    showToast('No se puede conectar al servidor. Verifica que esté ejecutándose.', 'error');
+                });
+        });
+    </script>
 </body>
 </html>
