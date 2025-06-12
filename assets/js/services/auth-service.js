@@ -3,7 +3,7 @@ class AuthService {
     constructor() {
         this.baseURL = 'http://localhost:3000/api/users'; // Ajusta según tu configuración
         this.tokenKey = 'pelispro_token';
-        // this.userKey = 'pelispro_user';
+        this.userKey = 'pelispro_user';
     }
 
     // Registro de usuario
