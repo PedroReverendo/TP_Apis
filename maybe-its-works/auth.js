@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupAuthPage() {
   // Check if already logged in
-  if (localStorage.getItem("user")) {
+  if (localStorage.getItem("token")) {
     window.location.href = "index.html"
     return
   }
@@ -46,35 +46,32 @@ async function handleLogin(e) {
     return
   }
 
-  // Simulate login (replace with real API call)
   try {
-    // Show loading
     const submitBtn = e.target.querySelector('button[type="submit"]')
     const originalText = submitBtn.textContent
     submitBtn.textContent = "Iniciando sesión..."
     submitBtn.disabled = true
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const res = await fetch("http://localhost:3000/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
 
-    // For demo purposes, accept any email/password
-    const user = {
-      id: Date.now(),
-      email: email,
-      name: email.split("@")[0],
-      loginAt: new Date().toISOString(),
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.message || "Error al iniciar sesión")
     }
 
-    localStorage.setItem("user", JSON.stringify(user))
+    const data = await res.json()
+    localStorage.setItem("token", data.token)
     alert("¡Inicio de sesión exitoso!")
     window.location.href = "index.html"
   } catch (error) {
-    alert("Error al iniciar sesión. Inténtalo de nuevo.")
-
-    // Reset button
+    alert(error.message || "Error al iniciar sesión. Inténtalo de nuevo.")
+  } finally {
     const submitBtn = e.target.querySelector('button[type="submit"]')
-    const originalText = submitBtn.textContent // Declare originalText variable
-    submitBtn.textContent = originalText
+    submitBtn.textContent = "Iniciar sesión"
     submitBtn.disabled = false
   }
 }
@@ -87,7 +84,6 @@ async function handleRegister(e) {
   const email = inputs[1].value
   const password = inputs[2].value
 
-  // Simple validation
   if (!name || !email || !password) {
     alert("Por favor completa todos los campos")
     return
@@ -98,34 +94,30 @@ async function handleRegister(e) {
     return
   }
 
-  // Simulate registration
   try {
-    // Show loading
     const submitBtn = e.target.querySelector('button[type="submit"]')
     const originalText = submitBtn.textContent
     submitBtn.textContent = "Creando cuenta..."
     submitBtn.disabled = true
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const res = await fetch("http://localhost:3000/api/users/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: name, email, password }),
+    })
 
-    const user = {
-      id: Date.now(),
-      name: name,
-      email: email,
-      registeredAt: new Date().toISOString(),
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.error || "Error al crear la cuenta")
     }
 
-    localStorage.setItem("user", JSON.stringify(user))
     alert("¡Cuenta creada exitosamente!")
     window.location.href = "index.html"
   } catch (error) {
-    alert("Error al crear la cuenta. Inténtalo de nuevo.")
-
-    // Reset button
+    alert(error.message || "Error al crear la cuenta. Inténtalo de nuevo.")
+  } finally {
     const submitBtn = e.target.querySelector('button[type="submit"]')
-    const originalText = submitBtn.textContent // Declare originalText variable
-    submitBtn.textContent = originalText
+    submitBtn.textContent = "Crear cuenta"
     submitBtn.disabled = false
   }
 }

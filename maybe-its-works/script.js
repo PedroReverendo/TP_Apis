@@ -145,6 +145,7 @@ function switchToSeries() {
   loadContent()
 }
 
+
 function createMovieCard(item) {
   const template = document.getElementById("movie-card-template")
   const card = template.content.cloneNode(true)
@@ -191,6 +192,45 @@ async function loadMovieDetail() {
     const movie = await movieAPI.getMovieDetails(movieId)
     const template = document.getElementById("movie-detail-template")
     const detailClone = template.content.cloneNode(true)
+
+    // Luego de llenar los datos y antes de appendar el template:
+const addFavBtn = detailClone.querySelector("#add-favorite-btn");
+addFavBtn.addEventListener("click", async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Debes iniciar sesión para agregar favoritos.");
+    window.location.href = "auth.html";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/users/favorites", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        movieId: movie.id,
+        title: movie.title,
+        posterPath: movie.poster_path
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Película agregada a favoritos!");
+    } else {
+      alert("Error: " + (data.error || "No se pudo agregar a favoritos"));
+    }
+  } catch (error) {
+    alert("Error de conexión al agregar favoritos.");
+    console.error(error);
+  }
+});
+
+
 
     const poster = detailClone.querySelector(".detail-poster")
     const title = detailClone.querySelector(".detail-title")
