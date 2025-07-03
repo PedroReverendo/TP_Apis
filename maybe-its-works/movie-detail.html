@@ -13,7 +13,6 @@
         
         <main class="movie-detail">
             <div id="movie-content" class="loading">
-                Cargando detalles...
             </div>
 
             <template id="movie-detail-template">
@@ -33,15 +32,24 @@
                 <div class="detail-overview">
                   <h3>Description</h3>
                   <p class="detail-description"></p>
-                              <button id="add-favorite-btn">Agregar a favoritos ⭐</button>
                 </div>
+              <section class="comments-section">
+                <h3>Comentarios</h3>
+                <div id="comments-list">Cargando comentarios...</div>
+                              
+                <form id="comment-form">
+                  <textarea id="comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
+                  <button type="submit">Publicar</button>
+                </form>
+              </section>
+              
               </div>
             </template>
         </main>
         
         <nav class="bottom-nav">
             <div class="nav-item" onclick="window.location.href='index.html'"> Volver</div>
-            <div class="nav-item" id="profile-btn">Perfil</div>
+            <div class="nav-item" id="profile-btn" onclick="window.location.href='profile.html'">Perfil</div>
             <div class="nav-item" onclick="window.location.href='auth.html'">Login</div>
         </nav>
     </div>

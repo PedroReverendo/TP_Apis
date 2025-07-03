@@ -17,7 +17,7 @@ class MovieAPI {
   }
 
   async getPopularMovies(page = 1) {
-    const url = `${BASE_URL}/movie/popular?language=es-ES&page=${page}`
+    const url = `${BASE_URL}/movie/popular?language=en-US&page=${page}`
     const response = await fetch(url, API_OPTIONS)
     const data = await response.json()
     this.currentPage = page
@@ -25,7 +25,7 @@ class MovieAPI {
   }
 
   async getPopularTVShows(page = 1) {
-    const url = `${BASE_URL}/tv/popular?language=es-ES&page=${page}`
+    const url = `${BASE_URL}/tv/popular?language=en-US&page=${page}`
     const response = await fetch(url, API_OPTIONS)
     const data = await response.json()
     this.currentPage = page
@@ -33,13 +33,13 @@ class MovieAPI {
   }
 
   async getMovieDetails(movieId) {
-    const url = `${BASE_URL}/movie/${movieId}?language=es-ES&append_to_response=credits`
+    const url = `${BASE_URL}/movie/${movieId}?language=en-US&append_to_response=credits`
     const response = await fetch(url, API_OPTIONS)
     return await response.json()
   }
 
   async searchMovies(query, page = 1) {
-    const url = `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&language=es-ES&page=${page}`
+    const url = `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&language=en-US&page=${page}`
     const response = await fetch(url, API_OPTIONS)
     return await response.json()
   }
@@ -145,7 +145,6 @@ function switchToSeries() {
   loadContent()
 }
 
-
 function createMovieCard(item) {
   const template = document.getElementById("movie-card-template")
   const card = template.content.cloneNode(true)
@@ -178,6 +177,72 @@ function initMovieDetailPage() {
   loadMovieDetail()
 }
 
+async function loadComments(movieId) {
+  const container = document.getElementById("comments-list")
+  try {
+    const res = await fetch(`http://localhost:3000/api/comments/${movieId}`)
+    const comments = await res.json()
+
+    if (comments.length === 0) {
+      container.innerHTML = "<p>No comments yet.</p>"
+    } else {
+      container.innerHTML = comments
+        .map(
+          (c) =>
+            `<div class="comment"><strong>${c.user.username}</strong>: ${c.content}</div>`
+        )
+        .join("")
+    }
+  } catch (err) {
+    console.error(err)
+    container.innerHTML = "<p>Error loading comments.</p>"
+  }
+}
+
+function setupCommentForm(movieId) {
+  const form = document.getElementById("comment-form")
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const input = document.getElementById("comment-input")
+    const content = input.value.trim()
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+      alert("Tenés que iniciar sesión para comentar.")
+      return
+    }
+
+    if (!content) return
+
+    // 👉 Obtener el título desde el DOM
+    const movieTitle = document.querySelector(".detail-title")?.textContent?.trim()
+    if (!movieTitle) {
+      alert("No se encontró el título de la película.")
+      return
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/comments/${movieId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content, movieTitle }), // ⬅️ Enviar también el título
+      })
+
+      if (!res.ok) throw new Error("Error al comentar")
+
+      input.value = ""
+      loadComments(movieId)
+    } catch (err) {
+      alert("No se pudo publicar el comentario.")
+      console.error(err)
+    }
+  })
+}
+
+
 async function loadMovieDetail() {
   const urlParams = new URLSearchParams(window.location.search)
   const movieId = urlParams.get("id")
@@ -193,45 +258,7 @@ async function loadMovieDetail() {
     const template = document.getElementById("movie-detail-template")
     const detailClone = template.content.cloneNode(true)
 
-    // Luego de llenar los datos y antes de appendar el template:
-const addFavBtn = detailClone.querySelector("#add-favorite-btn");
-addFavBtn.addEventListener("click", async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("Debes iniciar sesión para agregar favoritos.");
-    window.location.href = "auth.html";
-    return;
-  }
-
-  try {
-    const res = await fetch("http://localhost:3000/api/users/favorites", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        movieId: movie.id,
-        title: movie.title,
-        posterPath: movie.poster_path
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      alert("Película agregada a favoritos!");
-    } else {
-      alert("Error: " + (data.error || "No se pudo agregar a favoritos"));
-    }
-  } catch (error) {
-    alert("Error de conexión al agregar favoritos.");
-    console.error(error);
-  }
-});
-
-
-
+    // Template element references
     const poster = detailClone.querySelector(".detail-poster")
     const title = detailClone.querySelector(".detail-title")
     const rating = detailClone.querySelector(".detail-rating")
@@ -240,18 +267,67 @@ addFavBtn.addEventListener("click", async () => {
     const genres = detailClone.querySelector(".detail-genres")
     const description = detailClone.querySelector(".detail-description")
 
+    // Assign content
     poster.src = movie.poster_path ? IMG_URL + movie.poster_path : ""
     poster.alt = movie.title
     title.textContent = movie.title
     rating.textContent = movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"
     year.textContent = movie.release_date ? new Date(movie.release_date).getFullYear() : "N/A"
     runtime.textContent = movie.runtime ? `${movie.runtime} min` : "N/A"
-    genres.textContent = movie.genres?.map(g => g.name).join(", ") || "N/A"
+    genres.textContent = movie.genres?.map((g) => g.name).join(", ") || "N/A"
     description.textContent = movie.overview || "No description available."
 
+    // Add favorite button
+    const addFavBtn = document.createElement("button")
+    addFavBtn.id = "add-favorite-btn"
+    addFavBtn.textContent = "Add to favorites"
+    addFavBtn.classList.add("favorite-btn")
+    detailClone.querySelector(".detail-overview").appendChild(addFavBtn)
+
+    addFavBtn.addEventListener("click", async () => {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        alert("You must log in to add favorites.")
+        window.location.href = "auth.html"
+        return
+      }
+
+      try {
+        const res = await fetch("http://localhost:3000/api/users/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            movieId: movie.id,
+            title: movie.title,
+            posterPath: movie.poster_path,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (res.ok) {
+          alert("Movie added to favorites!")
+        } else {
+          alert("Error: " + (data.error || "Could not add to favorites"))
+        }
+      } catch (error) {
+        alert("Connection error adding to favorites.")
+        console.error(error)
+      }
+    })
+
+    // Insert into DOM
     movieContent.appendChild(detailClone)
     document.title = `${movie.title} - PelisPRO`
+
+    // Comments (load and setup form)
+    loadComments(movie.id)
+    setupCommentForm(movie.id)
   } catch (error) {
+    console.error(error)
     movieContent.innerHTML = '<div class="error">Error loading movie details</div>'
   }
 }

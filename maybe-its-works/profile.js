@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:3001/api/users";
+const API_BASE = "http://localhost:3000/api/users";
+import { getMyComments } from './services.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cargarUsuario(token);
   cargarFavoritos(token);
+  cargarMisComentarios(); // ← Agregamos esta línea
 
   document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem("token");
@@ -64,5 +66,26 @@ async function cargarFavoritos(token) {
   } catch (error) {
     alert("Error cargando favoritos");
     console.error(error);
+  }
+}
+
+async function cargarMisComentarios() {
+  const container = document.getElementById("my-comments");
+  try {
+    const comments = await getMyComments();
+    if (comments.length === 0) {
+      container.innerHTML = "<p>No hiciste ningún comentario todavía.</p>";
+    } else {
+      container.innerHTML = comments.map(c => `
+        <div class="comment">
+          <p><strong>Película:</strong> ${c.movieTitle} <span style="color: #888;">(ID: ${c.movie})</span></p>
+          <p><strong>Comentario:</strong> ${c.content}</p>
+          <p><strong>Fecha:</strong> ${new Date(c.createdAt).toLocaleDateString()}</p>
+        </div>
+      `).join("");
+    }
+  } catch (err) {
+    container.innerHTML = "<p>Error al obtener tus comentarios.</p>";
+    console.error(err);
   }
 }

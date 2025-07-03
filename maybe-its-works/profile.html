@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil - PelisPRO</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="background"></div>
+    
+    <main>
+      <h1 id="page-title">Perfil de Usuario</h1>
+      
+      <div id="user-info">
+        <p>Cargando información...</p>
+      </div>
+      
+      <h2 class="section-title">Películas Favoritas</h2>
+      
+      <div id="favorites-list" class="movies-grid">
+        <p>Cargando favoritos...</p>
+      </div>
+      <section>
+        <h3>Mis Comentarios</h3>
+        <div id="my-comments">Cargando...</div>
+      </section>
+
+      
+      <button id="logout-btn">Cerrar sesión</button>
+    </main>
+      <nav class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='index.html'"> Volver</div>
+        <div class="nav-item" id="profile-btn" onclick="window.location.href='profile.html'">Perfil</div>
+        <div class="nav-item" onclick="window.location.href='auth.html'">Login</div>
+      </nav>
+  </div>
+  
+  <script type="module" src="./profile.js"></script>
+</body>
+</html>
