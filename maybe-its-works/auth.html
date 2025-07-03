@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PelisPRO - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app auth-page">
+        <div class="background"></div>
+        
+        <main class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab active" data-tab="login">Login</button>
+                <button class="tab" data-tab="register">Registro</button>
+            </div>
+            
+            <div class="auth-forms">
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <h2>Bienvenido a PelisPRO!</h2>
+                    <h3>Inicia Sesión</h3>
+                    
+                    <input type="email" placeholder="E-mail" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    
+                    <button type="submit">Inicia Sesión</button>
+                    <button type="button" class="secondary" onclick="switchTab('register')">Crear Cuenta</button>
+                </form>
+                
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form">
+                    <h2>Bienvenido a PelisPRO!</h2>
+                    <h3>Crea tu Cuenta</h3>
+                    
+                    <input type="text" placeholder="Nombre" required>
+                    <input type="email" placeholder="E-Mail" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    
+                    <button type="submit">Crear Cuenta</button>
+                    <button type="button" class="secondary" onclick="window.location.href='index.html'">Volver</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="auth.js"></script>
+</body>
+</html>

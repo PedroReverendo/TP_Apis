@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PelisPRO - Detalle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <div class="background"></div>
+        
+        <main class="movie-detail">
+            <div id="movie-content" class="loading">
+                Cargando detalles...
+            </div>
+
+            <template id="movie-detail-template">
+              <div class="detail-content">
+                <div class="detail-header">
+                  <img class="detail-poster" src="" alt="">
+                  <div class="detail-info">
+                    <h1 class="detail-title"></h1>
+                    <div class="detail-meta">
+                      <div class="meta-item"><span>Rating:</span> <span class="detail-rating"></span></div>
+                      <div class="meta-item"><span>Year:</span> <span class="detail-year"></span></div>
+                      <div class="meta-item"><span>Duration:</span> <span class="detail-runtime"></span></div>
+                      <div class="meta-item"><span>Genres:</span> <span class="detail-genres"></span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="detail-overview">
+                  <h3>Description</h3>
+                  <p class="detail-description"></p>
+                </div>
+              </div>
+            </template>
+
+        </main>
+        
+        <nav class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='index.html'"> Volver</div>
+            <div class="nav-item star" id="favorite-btn">⭐</div>
+            <div class="nav-item" onclick="window.location.href='auth.html'">Login</div>
+        </nav>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

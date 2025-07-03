@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PelisPRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <div class="background"></div>
+        
+        <header>
+            <div class="search-box">
+                <button id="search-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <input type="text" id="search-input" placeholder="Buscar películas...">
+            </div>
+        </header>
+        
+        <main>
+            <h1 id="page-title">Popular Movies</h1>
+            <div id="movies-grid" class="movies-grid">
+                <div class="loading">Loading movies...</div>
+            </div>
+            <div class="load-more-container">
+                <button id="load-more-btn" class="load-more-btn" style="display: none;">Load More Movies</button>
+            </div>
+        </main>
+        
+        <nav class="bottom-nav">
+            <div class="nav-item">Movies</div>
+            <div class="nav-item star">⭐</div>
+            <div class="nav-item">Series</div>
+        </nav>
+    </div>
+
+    <!-- Movie card template - This is the skeleton that gets cloned for each movie -->
+    <template id="movie-card-template">
+        <div class="movie-card">
+            <img class="movie-poster" alt="" loading="lazy">
+            <div class="movie-info">
+                <div class="movie-title"></div>
+                <div class="movie-date"></div>
+                <div class="movie-rating"></div>
+            </div>
+        </div>
+    </template>
+    
+    <script src="script.js"></script>
+</body>
+</html>
